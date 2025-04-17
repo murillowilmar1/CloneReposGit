@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       branch_name:
-        description: 'ft/wmcbranch'
+        description: 'Ingresar Nombre de la Rama'
         required: true
 
 jobs:
