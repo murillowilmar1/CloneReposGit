@@ -1,4 +1,4 @@
-name: Crear rama con GitHub CLI y push autenticado
+name: Crear rama desde main (solución definitiva sin gh)
 
 on:
   workflow_dispatch:
@@ -12,27 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Instalar GitHub CLI
-        run: |
-          sudo apt update
-          sudo apt install gh -y
-
-      - name: Clonar el repositorio con GitHub CLI
+      - name: Clonar el repositorio manualmente con autenticación
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh repo clone ${{ github.repository }} repo
+          git config --global user.name "murillowilmar1"
+          git config --global user.email "murillowilmar1@gmail.com"
+
+          # Clonar con autenticación explícita
+          git clone https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} repo
           cd repo
 
-          # Configurar usuario
-          git config user.name "murillowilmar1"
-          git config user.email "murillowilmar1@gmail.com"
-
-          # Crear la rama
+          # Crear nueva rama desde main
           git checkout -b ${{ github.event.inputs.branch_name }} origin/main
 
-          # Reescribir remote con token
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-
-          # Hacer push
+          # Subir la nueva rama
           git push origin ${{ github.event.inputs.branch_name }}
