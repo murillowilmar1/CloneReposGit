@@ -16,9 +16,15 @@ jobs:
           git config --global user.name "murillowilmar1"
           git config --global user.email "murillowilmar1@gmail.com"
 
-      - name: Mostrar configuración actual de Git
+      - name: Validar configuración de usuario Git
         run: |
-          echo "Verificando configuración de Git:"
-          git config --global --get user.name
-          git config --global --get user.email
+          NAME=$(git config --global --get user.name)
+          EMAIL=$(git config --global --get user.email)
+
+          if [[ "$NAME" == "murillowilmar1" && "$EMAIL" == "murillowilmar1@gmail.com" ]]; then
+            echo "✅ Configuración correcta de usuario Git: $NAME <$EMAIL>"
+          else
+            echo "❌ Configuración incorrecta: $NAME <$EMAIL>"
+            exit 1
+          fi
 
