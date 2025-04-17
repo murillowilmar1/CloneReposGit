@@ -1,4 +1,4 @@
-name: Crear rama con GitHub CLI
+name: Crear rama con GitHub CLI y push autenticado
 
 on:
   workflow_dispatch:
@@ -23,7 +23,16 @@ jobs:
         run: |
           gh repo clone ${{ github.repository }} repo
           cd repo
+
+          # Configurar usuario
           git config user.name "murillowilmar1"
           git config user.email "murillowilmar1@gmail.com"
+
+          # Crear la rama
           git checkout -b ${{ github.event.inputs.branch_name }} origin/main
+
+          # Reescribir remote con token
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+
+          # Hacer push
           git push origin ${{ github.event.inputs.branch_name }}
