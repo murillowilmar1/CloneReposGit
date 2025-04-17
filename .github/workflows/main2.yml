@@ -1,4 +1,4 @@
-name: Crear rama desde main
+name: Crear rama desde main (con autenticación)
 
 on:
   workflow_dispatch:
@@ -12,28 +12,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clonar el repositorio
+      - name: Clonar el repositorio con fetch completo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # importante para permitir crear ramas
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configurar usuario Git
         run: |
           git config --global user.name "murillowilmar1"
           git config --global user.email "murillowilmar1@gmail.com"
 
-      - name: Crear nueva rama desde main y subirla
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Reescribir URL remota con autenticación
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: Crear y subir nueva rama desde main
         run: |
           git checkout main
           git pull origin main
           git checkout -b ${{ github.event.inputs.branch_name }}
-          
-          # Autenticación con token de GitHub
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
-          
           git push origin ${{ github.event.inputs.branch_name }}
 
-      - name: Confirmar éxito
-        run: echo "✅ Rama '${{ github.event.inputs.branch_name }}' creada exitosamente desde 'main'"
+      - name: Confirmación
+        run: echo "✅ Rama '${{ github.event.inputs.branch_name }}' creada correctamente desde 'main'"
