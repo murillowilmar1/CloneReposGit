@@ -1,0 +1,24 @@
+name: Configurar Git en GitHub Actions
+
+on:
+  workflow_dispatch:  # Permite ejecutarlo manualmente
+
+jobs:
+  setup-git:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verificar código fuente
+        uses: actions/checkout@v3
+
+      - name: Configurar usuario Git
+        run: |
+          git config --global user.name "murillowilmar1"
+          git config --global user.email "murillowilmar1@gmail.com"
+
+      - name: Mostrar configuración actual de Git
+        run: |
+          echo "Verificando configuración de Git:"
+          git config --global --get user.name
+          git config --global --get user.email
+
