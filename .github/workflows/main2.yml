@@ -1,4 +1,4 @@
-name: Crear rama usando GitHub CLI
+name: Crear rama con GitHub CLI
 
 on:
   workflow_dispatch:
@@ -17,17 +17,13 @@ jobs:
           sudo apt update
           sudo apt install gh -y
 
-      - name: Autenticar GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "${GH_TOKEN}" | gh auth login --with-token
-
-      - name: Crear rama desde main usando GitHub CLI
+      - name: Clonar el repositorio con GitHub CLI
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh repo clone ${{ github.repository }} repo
           cd repo
+          git config user.name "murillowilmar1"
+          git config user.email "murillowilmar1@gmail.com"
           git checkout -b ${{ github.event.inputs.branch_name }} origin/main
           git push origin ${{ github.event.inputs.branch_name }}
