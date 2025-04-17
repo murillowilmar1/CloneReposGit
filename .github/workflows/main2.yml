@@ -1,0 +1,33 @@
+name: Crear rama desde main
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: 'ft/wmcbranch'
+        required: true
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar el repositorio
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # importante para permitir crear ramas
+
+      - name: Configurar usuario Git
+        run: |
+          git config --global user.name "murillowilmar1"
+          git config --global user.email "murillowilmar1@gmail.com"
+
+      - name: Crear nueva rama desde main
+        run: |
+          git checkout main
+          git pull origin main
+          git checkout -b ${{ github.event.inputs.branch_name }}
+          git push origin ${{ github.event.inputs.branch_name }}
+
+      - name: Confirmar éxito
+        run: echo "✅ Rama '${{ github.event.inputs.branch_name }}' creada exitosamente desde 'main'"
